@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -18,11 +19,14 @@ import androidx.compose.ui.unit.sp
 fun CustomInputField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String
+    placeholder: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
+        visualTransformation = visualTransformation,
         modifier = Modifier.fillMaxWidth(),
         textStyle = TextStyle(fontSize = 14.sp, color = Color.Black),
         decorationBox = { innerTextField ->

@@ -24,6 +24,9 @@ import com.google.firebase.auth.FirebaseUser
 
 @Composable
 fun MainApp() {
+    // BẠN HÃY ĐỔI EMAIL NÀY THÀNH EMAIL CÁ NHÂN CỦA BẠN ĐỂ LÀM ADMIN NHÉ!
+    val ADMIN_EMAIL = "admin@gmail.com" 
+
     val auth = FirebaseAuth.getInstance()
     var currentUser by remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
 
@@ -39,26 +42,16 @@ fun MainApp() {
             currentUser = user
         })
     } else {
-        if (currentUser?.email == "admin@gmail.com") {
-            val productViewModel: ProductViewModel = viewModel()
-            ProductScreen(
-                viewModel = productViewModel,
-                onLogout = {
-                    auth.signOut()
-                }
-            )
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("Không có quyền truy cập!", color = Color.Red)
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { auth.signOut() }) {
-                    Text("Đăng xuất")
-                }
+        // So sánh email hiện tại với ADMIN_EMAIL để cấp quyền
+        val isAdmin = currentUser?.email == ADMIN_EMAIL
+        val productViewModel: ProductViewModel = viewModel()
+        
+        ProductScreen(
+            viewModel = productViewModel,
+            isAdmin = isAdmin,
+            onLogout = {
+                auth.signOut()
             }
-        }
+        )
     }
 }

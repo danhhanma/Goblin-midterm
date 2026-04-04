@@ -35,6 +35,7 @@ import com.example.goblin_midterm.model.Product
 @Composable
 fun ProductItem(
     product: Product,
+    isAdmin: Boolean,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -89,58 +90,60 @@ fun ProductItem(
             })
         }
 
-        Row(
-            modifier = Modifier.height(60.dp), 
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(1.dp)
-                    .height(60.dp)
-                    .background(Color.LightGray)
-            )
-            
-            Column(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(60.dp),
-                verticalArrangement = Arrangement.SpaceEvenly
+        if (isAdmin) {
+            Row(
+                modifier = Modifier.height(60.dp), 
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .clickable { onEdit() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Sửa",
-                        tint = Color(0xFFF0B305),
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
+                        .width(1.dp)
+                        .height(60.dp)
                         .background(Color.LightGray)
                 )
-
-                Box(
+                
+                Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .clickable { onDelete() },
-                    contentAlignment = Alignment.Center
+                        .width(40.dp)
+                        .height(60.dp),
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Xóa",
-                        tint = Color.Red, 
-                        modifier = Modifier.size(16.dp)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .clickable { onEdit() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Sửa",
+                            tint = Color(0xFFF0B305),
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Color.LightGray)
                     )
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .clickable { onDelete() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Xóa",
+                            tint = Color.Red, 
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
                 }
             }
         }

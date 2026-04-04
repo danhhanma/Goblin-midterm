@@ -43,7 +43,7 @@ import com.example.goblin_midterm.ui.components.ProductItem
 import com.example.goblin_midterm.viewmodel.ProductViewModel
 
 @Composable
-fun ProductScreen(viewModel: ProductViewModel, onLogout: () -> Unit) {
+fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () -> Unit) {
     val context = LocalContext.current
     val productList by viewModel.productList.collectAsState()
 
@@ -87,72 +87,81 @@ fun ProductScreen(viewModel: ProductViewModel, onLogout: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomInputField(
-            value = viewModel.tenSanPham.value,
-            onValueChange = { viewModel.tenSanPham.value = it },
-            placeholder = "Ap phong nam"
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        CustomInputField(
-            value = viewModel.loaiSanPham.value,
-            onValueChange = { viewModel.loaiSanPham.value = it },
-            placeholder = "Thoi trang nu"
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        CustomInputField(
-            value = viewModel.gia.value,
-            onValueChange = { viewModel.gia.value = it },
-            placeholder = "300000"
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.LightGray, RectangleShape)
-                .clickable { launcher.launch("image/*") }
-                .padding(horizontal = 8.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Folder,
-                contentDescription = "Chọn file",
-                tint = Color.Black,
-                modifier = Modifier.size(20.dp)
+        if (isAdmin) {
+            CustomInputField(
+                value = viewModel.tenSanPham.value,
+                onValueChange = { viewModel.tenSanPham.value = it },
+                placeholder = "Ap phong nam"
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            val displayFileName = if (viewModel.fileName.value.isEmpty()) "pexels-blaque...jpg" else viewModel.fileName.value
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            CustomInputField(
+                value = viewModel.loaiSanPham.value,
+                onValueChange = { viewModel.loaiSanPham.value = it },
+                placeholder = "Thoi trang nu"
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            CustomInputField(
+                value = viewModel.gia.value,
+                onValueChange = { viewModel.gia.value = it },
+                placeholder = "300000"
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color.LightGray, RectangleShape)
+                    .clickable { launcher.launch("image/*") }
+                    .padding(horizontal = 8.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Folder,
+                    contentDescription = "Chọn file",
+                    tint = Color.Black,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                val displayFileName = if (viewModel.fileName.value.isEmpty()) "pexels-blaque...jpg" else viewModel.fileName.value
+                Text(
+                    text = displayFileName,
+                    fontSize = 12.sp,
+                    color = if (viewModel.fileName.value.isEmpty()) Color.LightGray else Color.DarkGray
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    viewModel.saveProduct()
+                },
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Blue 
+                ),
+                contentPadding = PaddingValues(vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = if (viewModel.editingId.value == null) "THÊM SẢN PHẨM" else "CẬP NHẬT",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        } else {
             Text(
-                text = displayFileName,
+                text = "Bạn đang xem dưới tư cách Khách (Chỉ xem).",
+                color = Color.Gray,
                 fontSize = 12.sp,
-                color = if (viewModel.fileName.value.isEmpty()) Color.LightGray else Color.DarkGray
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                viewModel.saveProduct()
-            },
-            shape = RectangleShape,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue 
-            ),
-            contentPadding = PaddingValues(vertical = 12.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = if (viewModel.editingId.value == null) "THÊM SẢN PHẨM" else "CẬP NHẬT",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
         
         Button(
             onClick = onLogout,
@@ -182,11 +191,12 @@ fun ProductScreen(viewModel: ProductViewModel, onLogout: () -> Unit) {
             items(productList) { product ->
                 ProductItem(
                     product = product,
+                    isAdmin = isAdmin,
                     onEdit = {
-                        viewModel.editProduct(product)
+                        if (isAdmin) viewModel.editProduct(product)
                     },
                     onDelete = {
-                        viewModel.deleteProduct(product.id)
+                        if (isAdmin) viewModel.deleteProduct(product.id)
                     }
                 )
             }
