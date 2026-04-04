@@ -5,12 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.goblin_midterm.ui.screens.MainApp
 import com.example.goblin_midterm.ui.theme.GoblinmidtermTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +17,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoblinmidtermTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    // Khởi động MainApp ở đây (nó tự quản lý padding hoặc bạn có thể pass padding vào tuỳ layout, 
+                    // nhưng MainApp hiện đang dùng Modifier.fillMaxSize() là okay)
+                    MainApp()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GoblinmidtermTheme {
-        Greeting("Android")
     }
 }

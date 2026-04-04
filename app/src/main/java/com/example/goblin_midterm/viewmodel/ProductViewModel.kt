@@ -9,21 +9,19 @@ import kotlinx.coroutines.flow.StateFlow
 
 class ProductViewModel : ViewModel() {
 
-    // Khai báo các MutableState theo yêu cầu
-    var productName = mutableStateOf("")
-    var productType = mutableStateOf("")
-    var price = mutableStateOf("")
+    var tenSanPham = mutableStateOf("")
+    var loaiSanPham = mutableStateOf("")
+    var gia = mutableStateOf("")
     var fileUriString = mutableStateOf("")
     var fileName = mutableStateOf("")
+    var editingId = mutableStateOf<String?>(null) // Để biết đang Thêm hay Sửa
 
     private val db = FirebaseFirestore.getInstance()
     private val productRef = db.collection("Products")
 
-    // State flow chứa danh sách Load realtime từ Database Firebase
     private val _productList = MutableStateFlow<List<Product>>(emptyList())
     val productList: StateFlow<List<Product>> get() = _productList
 
-    // Hàm lắng nghe realtime cho danh sách sản phẩm
     fun loadProducts() {
         productRef.addSnapshotListener { snapshot, error ->
             if (error != null) {
@@ -43,46 +41,47 @@ class ProductViewModel : ViewModel() {
         }
     }
 
-    // Hàm thêm sản phẩm
-    fun addProduct() {
-        val priceValue = price.value.toDoubleOrNull() ?: 0.0
+    // Xử lý cả Thêm và Sửa dựa vào editingId
+    fun saveProduct() {
+        val price = gia.value.toLongOrNull() ?: 0L
         val data = hashMapOf(
-            "productName" to productName.value,
-            "productType" to productType.value,
-            "price" to priceValue,
+            "tenSanPham" to tenSanPham.value,
+            "loaiSanPham" to loaiSanPham.value,
+            "gia" to price,
             "file" to fileUriString.value
         )
         
-        productRef.add(data).addOnSuccessListener {
-            clearInput()
+        if (editingId.value == null) {
+            productRef.add(data).addOnSuccessListener {
+                clearInput()
+            }
+        } else {
+            productRef.document(editingId.value!!).update(data as Map<String, Any>).addOnSuccessListener {
+                clearInput()
+            }
         }
     }
 
-    // Hàm cập nhật sản phẩm theo id
-    fun updateProduct(id: String) {
-        val priceValue = price.value.toDoubleOrNull() ?: 0.0
-        val data = hashMapOf(
-            "productName" to productName.value,
-            "productType" to productType.value,
-            "price" to priceValue,
-            "file" to fileUriString.value
-        )
-        productRef.document(id).update(data as Map<String, Any>).addOnSuccessListener {
-            clearInput()
-        }
+    // Đổ data lên form
+    fun editProduct(product: Product) {
+        editingId.value = product.id
+        tenSanPham.value = product.tenSanPham
+        loaiSanPham.value = product.loaiSanPham
+        gia.value = product.gia.toString()
+        fileUriString.value = product.file
+        fileName.value = "ảnh đính kèm..."
     }
 
-    // Hàm xóa sản phẩm
     fun deleteProduct(id: String) {
         productRef.document(id).delete()
     }
 
-    // Hàm phụ trợ để reset giá trị trong các input sau khi thực hiện
     private fun clearInput() {
-        productName.value = ""
-        productType.value = ""
-        price.value = ""
+        tenSanPham.value = ""
+        loaiSanPham.value = ""
+        gia.value = ""
         fileUriString.value = ""
         fileName.value = ""
+        editingId.value = null
     }
 }

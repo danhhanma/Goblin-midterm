@@ -4,8 +4,8 @@ import com.google.firebase.firestore.Exclude
 
 data class Product(
     @get:Exclude var id: String = "",
-    var productName: String = "",
-    var productType: String = "",
-    var price: Double = 0.0,
-    var file: String = "" 
+    var tenSanPham: String = "",
+    var loaiSanPham: String = "",
+    var gia: Long = 0L,
+    var file: String = ""
 )

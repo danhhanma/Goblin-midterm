@@ -42,21 +42,20 @@ fun ProductItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, Color.LightGray, RectangleShape)
-            .padding(4.dp), // Padding nhỏ bên trong theo yêu cầu
+            .padding(4.dp), 
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Cột 1 (Trái): Hình vuông 60dp, dùng Coil load ảnh
+        
         AsyncImage(
             model = product.file,
-            contentDescription = "Hình sản phẩm",
+            contentDescription = "Hình",
             modifier = Modifier
                 .size(60.dp)
-                .background(Color.LightGray) // Ảnh nền phòng trường hợp chưa có file
+                .background(Color.LightGray) 
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // Cột 2 (Giữa): Column chứa 3 dòng chữ, các dòng khít nhau
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -67,7 +66,7 @@ fun ProductItem(
                     append("Tên sp: ")
                 }
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Normal, fontSize = smallFontSize)) {
-                    append(product.productName)
+                    append(product.tenSanPham)
                 }
             })
 
@@ -76,13 +75,7 @@ fun ProductItem(
                     append("Giá sp: ")
                 }
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Normal, fontSize = smallFontSize)) {
-                    // Xử lý hiển thị số dạng chuỗi, bỏ phần thập phân .0
-                    val priceValue = if (product.price % 1 == 0.0) {
-                        product.price.toLong().toString()
-                    } else {
-                        product.price.toString()
-                    }
-                    append(priceValue)
+                    append(product.gia.toString())
                 }
             })
 
@@ -91,17 +84,15 @@ fun ProductItem(
                     append("Loại sp: ")
                 }
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Normal, fontSize = smallFontSize)) {
-                    append(product.productType)
+                    append(product.loaiSanPham)
                 }
             })
         }
 
-        // Cột 3 (Phải): Đường kẻ dọc ngang Column (Divider) + Nút sửa xóa
         Row(
-            modifier = Modifier.height(60.dp), // Giữ bằng height của image để line dọc thẳng đẹp
+            modifier = Modifier.height(60.dp), 
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Đường kẻ dọc ngăn cách
             Box(
                 modifier = Modifier
                     .width(1.dp)
@@ -109,14 +100,12 @@ fun ProductItem(
                     .background(Color.LightGray)
             )
             
-            // Cột chứa 2 nút hình chữ nhật không bo tròn
             Column(
                 modifier = Modifier
                     .width(40.dp)
                     .height(60.dp),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Nút trên (Sửa)
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -127,12 +116,11 @@ fun ProductItem(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Sửa",
-                        tint = Color(0xFFF0B305), // Icon cây bút màu vàng giống ảnh
+                        tint = Color(0xFFF0B305),
                         modifier = Modifier.size(16.dp)
                     )
                 }
 
-                // Đường kẻ ngang ngăn cách giữa 2 nút (để trông vuông vức giống bảng)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,7 +128,6 @@ fun ProductItem(
                         .background(Color.LightGray)
                 )
 
-                // Nút dưới (Xóa)
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -151,7 +138,7 @@ fun ProductItem(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Xóa",
-                        tint = Color.Red, // Icon thùng rác màu đỏ
+                        tint = Color.Red, 
                         modifier = Modifier.size(16.dp)
                     )
                 }
