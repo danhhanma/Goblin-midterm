@@ -76,7 +76,7 @@ class ProductViewModel : ViewModel() {
         productRef.document(id).delete()
     }
 
-    private fun clearInput() {
+    fun clearInput() {
         tenSanPham.value = ""
         loaiSanPham.value = ""
         gia.value = ""
