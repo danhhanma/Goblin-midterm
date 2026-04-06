@@ -53,9 +53,17 @@ fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () ->
     }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             viewModel.fileUriString.value = it.toString()
             var name = "image_selected.jpg"
             val cursor = context.contentResolver.query(it, null, null, null, null)
@@ -94,9 +102,10 @@ fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () ->
                 onClick = onLogout,
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier.align(Alignment.CenterEnd).height(36.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
             ) {
-                Text("ĐĂNG XUẤT", color = Color.White)
+                Text("ĐĂNG XUẤT", color = Color.White, fontSize = 12.sp)
             }
         }
 
@@ -128,7 +137,7 @@ fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () ->
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(1.dp, Color.LightGray, RectangleShape)
-                    .clickable { launcher.launch("image/*") }
+                    .clickable { launcher.launch(arrayOf("image/*")) }
                     .padding(horizontal = 8.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
