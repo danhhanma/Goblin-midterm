@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -77,13 +78,27 @@ fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () ->
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         
-        Text(
-            text = "Dữ liệu sản phẩm",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Dữ liệu sản phẩm",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Button(
+                onClick = onLogout,
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Text("ĐĂNG XUẤT", color = Color.White)
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -162,16 +177,6 @@ fun ProductScreen(viewModel: ProductViewModel, isAdmin: Boolean, onLogout: () ->
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-        
-        Button(
-            onClick = onLogout,
-            shape = RectangleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("ĐĂNG XUẤT", color = Color.White)
-        }
-        
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
