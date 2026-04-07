@@ -24,13 +24,11 @@ import com.google.firebase.auth.FirebaseUser
 
 @Composable
 fun MainApp() {
-    // BẠN HÃY ĐỔI EMAIL NÀY THÀNH EMAIL CÁ NHÂN CỦA BẠN ĐỂ LÀM ADMIN NHÉ!
-    val ADMIN_EMAIL = "admin@gmail.com" 
+    val ADMIN_EMAIL = "admin@gmail.com"
 
     val auth = FirebaseAuth.getInstance()
     var currentUser by remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
 
-    // Theo dõi trạng thái đăng nhập
     LaunchedEffect(auth) {
         auth.addAuthStateListener { firebaseAuth ->
             currentUser = firebaseAuth.currentUser
@@ -42,7 +40,6 @@ fun MainApp() {
             currentUser = user
         })
     } else {
-        // So sánh email hiện tại với ADMIN_EMAIL để cấp quyền
         val isAdmin = currentUser?.email == ADMIN_EMAIL
         val productViewModel: ProductViewModel = viewModel()
         
